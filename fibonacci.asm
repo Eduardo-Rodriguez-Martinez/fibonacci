@@ -1,3 +1,7 @@
+; Este programa se ensambla y liga con el siguiente comando:
+; ml fibonacci.asm /Fe fibonacci.exe /link /SUBSYSTEM:CONSOLE /DEFAULTLIB:"C:\Irvine\Kernel32.lib"
+TITLE Calcula el n-esimo elemento de la secuencia de Fibonnacci	(fibonacci.asm)
+
 .386
 .MODEL flat, stdcall
 .STACK 4096
@@ -40,6 +44,7 @@ main PROC
     pop eax
     pop ebx
 
+    ;// Convierte enteros (int) a su ASCII (char)
     movzx edx, byte ptr[ebx + N]
     add edx, 30h
     mov ebx, OFFSET mensaje
@@ -48,9 +53,11 @@ main PROC
     add eax, 30h
     mov [ebx + 12], al
 
+    ;// Obtiene el puntero al manejador estandar de la consola
     INVOKE GetStdHandle, STD_OUTPUT_HANDLE
     mov manejadorConsola, eax
 
+    ;// Imprime el mensaje
     INVOKE WriteConsoleA,
         manejadorConsola,
         ADDR mensaje,
@@ -58,6 +65,7 @@ main PROC
         ADDR bytesEscritos,
         0
 
+    ;// Termina el programa principal y devuelve control al SO
     INVOKE ExitProcess, 0
 main endp
 
